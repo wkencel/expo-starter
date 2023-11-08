@@ -1,6 +1,7 @@
-import * as React from 'react';
+import {useState, useCallback, useEffect} from 'react';
 import { StatusBar, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
+// import auth from '@react-native-firebase/auth';
 import { func } from './src/constants';
 
 // root stack navigation
@@ -12,9 +13,12 @@ import AppState from './src/context/AppState';
 SplashScreen.preventAutoHideAsync();
 
 function App() {
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function prepare() {
       try {
         // pre-load/cache assets: images, fonts, and videos
@@ -30,7 +34,7 @@ function App() {
     prepare();
   }, []);
 
-  const onLayoutRootView = React.useCallback(async () => {
+  const onLayoutRootView = useCallback(async () => {
     if (isLoading === false) {
       // loading is complete, hide Splash Screen and show app
       await SplashScreen.hideAsync();
